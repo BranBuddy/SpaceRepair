@@ -1,48 +1,64 @@
 using Bran;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerJumping : MonoBehaviour
 {
     private PlayerMovement playerMovement;
     private InGamePhysics inGamePhysics;
+    private PlayerInput playerControls;
 
-    [SerializeField] private InputReader input;
-
-    [SerializeField] private float jumpSpeed;
+    private InputReader input;
 
     private bool isJumping;
+
+    internal Vector3 playerVelocity;
+
+    private float jumpHeight; 
+
+    private CharacterController characterController;
     void Start()
     {
         playerMovement = this.transform.GetComponent<PlayerMovement>();
         inGamePhysics = GetComponent<InGamePhysics>();
-
-        input.JumpEvent += HandleJump;
-        input.JumpCanceledEvent += HandleJumpCanceled;
+        characterController = GetComponent<CharacterController>();
+        input = InputReader.Instance;
     }
 
     // Update is called once per frame
-    public void Update()
+    public void FixedUpdate()
     {
         Jumping();
     }
    
     private void Jumping()
     {
-        if (isJumping)
+
+
+        if (playerMovement.GroundCheck())
         {
-            Debug.Log("Works");
-            transform.position += new Vector3(0, 3, 0) * (jumpSpeed * Time.deltaTime);
+
+            jumpHeight = 5;
+
+            playerMovement.currentMovement.y = 0;
+
+            if (input.JumpTrigger)
+            {
+                playerMovement.currentMovement.y += Mathf.Sqrt(jumpHeight * inGamePhysics.gravity);
+                Debug.Log("Hi");
+
+                characterController.Move(playerMovement.currentMovement * Time.deltaTime);
+            }
+
+        } 
+        else
+        {
+            playerMovement.currentMovement.y -= inGamePhysics.gravity * Time.deltaTime;
+
         }
+
+
     }
 
-    private void HandleJump()
-    {
-        isJumping = true;
-    }
-
-    private void HandleJumpCanceled()
-    {
-        isJumping = false;
-    }
 
 }
