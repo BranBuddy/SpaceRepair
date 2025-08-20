@@ -24,7 +24,7 @@ public class InGamePhysics : MonoBehaviour
         }
         else
         {
-            playerMovement.currentMovement.y -= gravity * Time.deltaTime;
+           
             Debug.Log("nO");
         }
     }
