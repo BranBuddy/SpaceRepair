@@ -488,6 +488,14 @@ PrefabInstance:
       value: 89.254
       objectReference: {fileID: 0}
     - target: {fileID: 6518147477558270948, guid: 7cf4752799e3d5146a2400ed59ddc9b0, type: 3}
+      propertyPath: input
+      value: 
+      objectReference: {fileID: 11400000, guid: fcc6cce326f567f4c894212b3fe0dd81, type: 2}
+    - target: {fileID: 6518147477558270948, guid: 7cf4752799e3d5146a2400ed59ddc9b0, type: 3}
+      propertyPath: speed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6518147477558270948, guid: 7cf4752799e3d5146a2400ed59ddc9b0, type: 3}
       propertyPath: boxSize.x
       value: 1
       objectReference: {fileID: 0}
@@ -847,6 +855,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3586ee8713fa7d94abb8753abac2c62e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  input: {fileID: 11400000, guid: fcc6cce326f567f4c894212b3fe0dd81, type: 2}
+  jumpSpeed: 1
 --- !u!114 &1780369192
 MonoBehaviour:
   m_ObjectHideFlags: 0

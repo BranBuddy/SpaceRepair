@@ -1,4 +1,4 @@
-
+using Bran;
 using UnityEngine;
 using UnityEngine.UI;
 public class PlayerMovement : MonoBehaviour
@@ -6,13 +6,11 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController characterController;
     private InGamePhysics inGamePhysics;
 
-    //Input Variables
-    private float verticalInput;    
-    private float horizontalInput;
-    public Vector3 currentMovement = Vector3.zero;
+    [SerializeField] private InputReader input;
 
-    //Player Attributes
-    internal float speed = 2f;
+    [SerializeField] private float speed;
+
+    internal Vector2 moveDirection;
 
     //GroundCheck Variables
     public Vector3 boxSize;
@@ -23,30 +21,31 @@ public class PlayerMovement : MonoBehaviour
     {
         inGamePhysics = GetComponent<InGamePhysics>();
         characterController = GetComponent<CharacterController>();
+
+        input.MoveEvent += HandleMove;
     }
 
     // Update is called once per frame
     public void Update()
     {
-        Movement();
+        Move();
     }
 
-    public void Movement()
+    private void HandleMove(Vector2 dir)
     {
-     
-        Vector3 horizontalMovement = new Vector3(horizontalInput, 0, verticalInput);
-
-        verticalInput = Input.GetAxis("Vertical");
-        horizontalInput = Input.GetAxis("Horizontal");
-
-        
-
-        currentMovement.x = horizontalMovement.x * speed;
-        currentMovement.z = horizontalMovement.z * speed;
-  
-        characterController.Move(currentMovement * Time.deltaTime * speed);  
-
+        moveDirection = dir;
     }
+
+    private void Move()
+    {
+        if (moveDirection == Vector2.zero)
+        {
+            return;
+        }
+
+        transform.position += new Vector3(moveDirection.x, 0, moveDirection.y) * (speed * Time.deltaTime);
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -55,25 +54,17 @@ public class PlayerMovement : MonoBehaviour
 
     public bool GroundCheck()
     {
-        if(Physics.BoxCast(transform.position,boxSize, -transform.up,transform.rotation,maxDistance, layerMask))
+        if (Physics.BoxCast(transform.position, boxSize, -transform.up, transform.rotation, maxDistance, layerMask))
         {
-            
+
 
             return true;
         }
         else
         {
-            
+
 
             return false;
-        }
-    }
-    public void Jumping()
-    {
-        if (Input.GetButtonDown("Jump") && GroundCheck())
-        {
-            currentMovement.y += 5 * inGamePhysics.gravity * Time.deltaTime;
-            currentMovement.y = 5;
         }
     }
 }
