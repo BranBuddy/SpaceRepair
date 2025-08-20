@@ -4,10 +4,12 @@ public class InGamePhysics : MonoBehaviour
 {
     internal float gravity = 9.81f;
     PlayerMovement playerMovement;
+    PlayerJumping jumping;
 
     void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
+        jumping = GetComponent<PlayerJumping>();
     }
 
     // Update is called once per frame
@@ -24,7 +26,7 @@ public class InGamePhysics : MonoBehaviour
         }
         else
         {
-           
+           playerMovement.currentMovement.y -= gravity * Time.deltaTime;
             Debug.Log("nO");
         }
     }

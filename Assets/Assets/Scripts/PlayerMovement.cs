@@ -6,44 +6,61 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController characterController;
     private InGamePhysics inGamePhysics;
 
-    [SerializeField] private InputReader input;
+    private InputReader input;
 
     [SerializeField] private float speed;
 
     internal Vector2 moveDirection;
 
+    internal Vector3 currentMovement = Vector3.zero;
+
     //GroundCheck Variables
-    public Vector3 boxSize;
+    private Vector3 boxSize = new Vector3(.8f, .1f, .8f);
     public float maxDistance;
     public LayerMask layerMask;
 
-    void Start()
+    [SerializeField] private float mouseSens = 2.0f;
+    [SerializeField] private float upDownRange = 80.0f;
+    private float verticalRotation;
+
+    private Camera mainCamera;
+
+    void Awake()
     {
         inGamePhysics = GetComponent<InGamePhysics>();
         characterController = GetComponent<CharacterController>();
-
-        input.MoveEvent += HandleMove;
+        input = InputReader.Instance;
+        mainCamera = Camera.main;
     }
 
     // Update is called once per frame
-    public void Update()
+    public void FixedUpdate()
     {
         Move();
+        Rotation();
     }
-
-    private void HandleMove(Vector2 dir)
+  
+    private void Rotation()
     {
-        moveDirection = dir;
+        float mouseXRotation = input.LookInput.x * mouseSens;
+        transform.Rotate(0, mouseXRotation, 0);
+
+        verticalRotation -= input.LookInput.y * mouseSens;
+        verticalRotation = Mathf.Clamp(verticalRotation, -upDownRange, upDownRange);
+        mainCamera.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
     }
 
     private void Move()
     {
-        if (moveDirection == Vector2.zero)
-        {
-            return;
-        }
 
-        transform.position += new Vector3(moveDirection.x, 0, moveDirection.y) * (speed * Time.deltaTime);
+        Vector3 horizontalMovement = new Vector3(input.MoveInput.x, 0, input.MoveInput.y);
+        Vector3 worldDirection = transform.TransformDirection(horizontalMovement);
+        worldDirection.Normalize();
+
+        currentMovement.x = worldDirection.x * speed;
+        currentMovement.z = worldDirection.z * speed;
+
+       characterController.Move(currentMovement * Time.deltaTime);
     }
 
     private void OnDrawGizmos()

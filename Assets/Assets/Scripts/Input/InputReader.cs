@@ -4,93 +4,63 @@ using UnityEngine.InputSystem;
 
 namespace Bran
 {
-
-    [CreateAssetMenu(menuName = "InputReader")]
-    public class InputReader : ScriptableObject, PlayerControls.IGameplayActions, PlayerControls.IUIActions
+    public class InputReader : MonoBehaviour
     {
-        private PlayerControls playerControls;
+        [SerializeField] private InputActionAsset playerControls;
+
+        [SerializeField] private string actionMapName = "Gameplay";
+
+        [SerializeField] private string move = "Move";
+        [SerializeField] private string jump = "Jump";
+        [SerializeField] private string look = "Look";
+
+        private InputAction moveAction;
+        private InputAction jumpAction;
+        private InputAction lookAction;
+
+        public Vector2 MoveInput { get; private set; }
+        public Vector2 LookInput { get; private set; }
+        public bool JumpTrigger { get; private set; }
+
+        public static InputReader Instance { get; private set; }
+
+        private void Awake()
+        {
+            if(Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+
+            moveAction = playerControls.FindActionMap(actionMapName).FindAction(move);
+            jumpAction = playerControls.FindActionMap(actionMapName).FindAction(jump);
+            lookAction = playerControls.FindActionMap(actionMapName).FindAction(look);
+
+            RegisterInputAction();
+        }
+
+        void RegisterInputAction()
+        {
+            moveAction.performed += context => MoveInput = context.ReadValue<Vector2>();
+            moveAction.canceled += context => MoveInput = context.ReadValue<Vector2>();
+
+            lookAction.performed += context => LookInput = context.ReadValue<Vector2>();
+            lookAction.canceled += context => LookInput = context.ReadValue<Vector2>();
+
+            jumpAction.performed += context => JumpTrigger = true;
+            jumpAction.canceled += context => JumpTrigger = false;
+        }
 
         private void OnEnable()
         {
-            if (playerControls == null)
-            {
-                playerControls = new PlayerControls();
-
-                playerControls.Gameplay.SetCallbacks(this);
-                playerControls.UI.SetCallbacks(this);
-            }
-
-            SetGameplay();
+            moveAction.Enable();
+            jumpAction.Enable();
+            lookAction.Enable();
         }
 
-        private void SetGameplay()
-        {
-            playerControls.Gameplay.Enable();
-            playerControls.UI.Disable();
-        }
-
-        private void SetUI()
-        {
-            playerControls.UI.Enable();
-            playerControls.Gameplay.Disable();
-        }
-
-        public event Action<Vector2> MoveEvent;
-
-        public event Action JumpEvent;
-        public event Action JumpCanceledEvent;
-
-        public event Action InteractEvent;
-
-        public event Action PauseEvent;
-        public event Action ResumeEvent;
-
-
-        public void OnInteract(InputAction.CallbackContext context)
-        {
-
-        }
-
-        public void OnJump(InputAction.CallbackContext context)
-        {
-            if (context.phase == InputActionPhase.Performed)
-            {
-                JumpEvent?.Invoke();
-            }
-
-            if(context.phase == InputActionPhase.Canceled)
-            {
-                JumpCanceledEvent?.Invoke();
-            }
-        }
-
-        public void OnLook(InputAction.CallbackContext context)
-        {
-
-        }
-
-        public void OnMove(InputAction.CallbackContext context)
-        {
-            MoveEvent?.Invoke(context.ReadValue<Vector2>());
-        }
-
-        public void OnPause(InputAction.CallbackContext context)
-        {
-            if (context.phase == InputActionPhase.Performed)
-            {
-                PauseEvent?.Invoke();
-                SetUI();
-            }
-        }
-
-        public void OnResume(InputAction.CallbackContext context)
-        {
-            if (context.phase == InputActionPhase.Performed)
-            {
-                ResumeEvent?.Invoke();
-                SetGameplay();
-            }
-        }
     }
-
 }
