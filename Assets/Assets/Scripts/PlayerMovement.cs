@@ -10,8 +10,6 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float speed;
 
-    internal Vector2 moveDirection;
-
     internal Vector3 currentMovement = Vector3.zero;
 
     //GroundCheck Variables
@@ -23,13 +21,18 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float upDownRange = 80.0f;
     private float verticalRotation;
 
-    private Camera mainCamera;
+    public Camera mainCamera;
 
-    void Awake()
+    void Start()
     {
         inGamePhysics = GetComponent<InGamePhysics>();
         characterController = GetComponent<CharacterController>();
         input = InputReader.Instance;
+        
+    }
+
+    private void Awake()
+    {
         mainCamera = Camera.main;
     }
 
