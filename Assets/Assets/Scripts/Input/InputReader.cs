@@ -13,14 +13,17 @@ namespace Bran
         [SerializeField] private string move = "Move";
         [SerializeField] private string jump = "Jump";
         [SerializeField] private string look = "Look";
+        [SerializeField] private string interact = "Interact";
 
         private InputAction moveAction;
         private InputAction jumpAction;
         private InputAction lookAction;
+        private InputAction interactAction;
 
         public Vector2 MoveInput { get; private set; }
         public Vector2 LookInput { get; private set; }
         public bool JumpTrigger { get; private set; }
+        public bool InteractTrigger { get; private set; }
 
         public static InputReader Instance { get; private set; }
 
@@ -39,6 +42,7 @@ namespace Bran
             moveAction = playerControls.FindActionMap(actionMapName).FindAction(move);
             jumpAction = playerControls.FindActionMap(actionMapName).FindAction(jump);
             lookAction = playerControls.FindActionMap(actionMapName).FindAction(look);
+            interactAction = playerControls.FindActionMap(actionMapName).FindAction(interact);
 
             RegisterInputAction();
         }
@@ -53,6 +57,9 @@ namespace Bran
 
             jumpAction.performed += context => JumpTrigger = true;
             jumpAction.canceled += context => JumpTrigger = false;
+
+            interactAction.performed += context => JumpTrigger = true;
+            interactAction.canceled += context => JumpTrigger = false;
         }
 
         private void OnEnable()
@@ -60,6 +67,7 @@ namespace Bran
             moveAction.Enable();
             jumpAction.Enable();
             lookAction.Enable();
+            interactAction.Enable();
         }
 
     }
