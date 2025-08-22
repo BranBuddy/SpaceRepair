@@ -10,8 +10,6 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float speed;
 
-    internal Vector2 moveDirection;
-
     internal Vector3 currentMovement = Vector3.zero;
 
     //GroundCheck Variables
@@ -19,31 +17,36 @@ public class PlayerMovement : MonoBehaviour
     public float maxDistance;
     public LayerMask layerMask;
 
-    [SerializeField] private float mouseSens = 2.0f;
+    [SerializeField] private float mouseSens = 1f;
     [SerializeField] private float upDownRange = 80.0f;
     private float verticalRotation;
 
     private Camera mainCamera;
 
-    void Awake()
+    void Start()
     {
-        inGamePhysics = GetComponent<InGamePhysics>();
         characterController = GetComponent<CharacterController>();
         input = InputReader.Instance;
+        inGamePhysics = GetComponent<InGamePhysics>();
+    }
+
+    private void Awake()
+    {
         mainCamera = Camera.main;
     }
 
     // Update is called once per frame
-    public void FixedUpdate()
+    public void Update()
     {
         Move();
         Rotation();
     }
-  
-    private void Rotation()
+
+    public void Rotation()
     {
         float mouseXRotation = input.LookInput.x * mouseSens;
         transform.Rotate(0, mouseXRotation, 0);
+        
 
         verticalRotation -= input.LookInput.y * mouseSens;
         verticalRotation = Mathf.Clamp(verticalRotation, -upDownRange, upDownRange);
@@ -73,7 +76,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Physics.BoxCast(transform.position, boxSize, -transform.up, transform.rotation, maxDistance, layerMask))
         {
-
+            Debug.Log("Yes");
 
             return true;
         }

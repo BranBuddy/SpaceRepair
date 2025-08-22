@@ -26,7 +26,7 @@ public class PlayerJumping : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void FixedUpdate()
+    public void Update()
     {
         Jumping();
     }
@@ -54,7 +54,6 @@ public class PlayerJumping : MonoBehaviour
         else
         {
             playerMovement.currentMovement.y -= inGamePhysics.gravity * Time.deltaTime;
-
         }
 
 

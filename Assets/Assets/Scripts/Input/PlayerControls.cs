@@ -34,7 +34,7 @@ namespace Bran
                     ""type"": ""Value"",
                     ""id"": ""eb528706-d84a-43ae-9ab0-dc184619b4d5"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
+                    ""processors"": ""NormalizeVector2"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },

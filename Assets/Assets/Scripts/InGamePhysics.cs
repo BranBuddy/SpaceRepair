@@ -1,34 +1,28 @@
+using Bran;
 using UnityEngine;
 
 public class InGamePhysics : MonoBehaviour
 {
-    internal float gravity = 9.81f;
     PlayerMovement playerMovement;
-    PlayerJumping jumping;
+    private InputReader input;
+
+    private bool canPressButton;
+
+    internal float gravity = 9.81f;
 
     void Start()
-    {
-        playerMovement = GetComponent<PlayerMovement>();
-        jumping = GetComponent<PlayerJumping>();
+    { 
+        input = InputReader.Instance;
+        canPressButton = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    void AdjustPlayerGravity(float gravityValue)
     {
-        AdjustPlayerGravity();  
+        if (input.InteractTrigger && canPressButton)
+        {
+            gravity = gravityValue * gravity;
+            canPressButton = true;
+        }
     }
 
-    void AdjustPlayerGravity()
-    {
-        if (playerMovement.GroundCheck())
-        {
-            Debug.Log("Yes");
-        }
-        else
-        {
-           playerMovement.currentMovement.y -= gravity * Time.deltaTime;
-            Debug.Log("nO");
-        }
-    }
-    
 }
