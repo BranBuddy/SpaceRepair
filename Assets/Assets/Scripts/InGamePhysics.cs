@@ -10,19 +10,21 @@ public class InGamePhysics : MonoBehaviour
 
     internal float gravity = 9.81f;
 
+    [SerializeField] private bool zeroGravity;
+
     void Start()
     { 
         input = InputReader.Instance;
         canPressButton = true;
     }
 
-    void AdjustPlayerGravity(float gravityValue)
+    internal void AdjustPlayerGravity(float gravityValue)
     {
-        if (input.InteractTrigger && canPressButton)
+        if (input.InteractTrigger)
         {
+            Debug.Log("Yo");
             gravity = gravityValue * gravity;
-            canPressButton = true;
         }
     }
-
+    
 }

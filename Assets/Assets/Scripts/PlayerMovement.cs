@@ -1,11 +1,9 @@
 using Bran;
 using UnityEngine;
-using UnityEngine.UI;
 public class PlayerMovement : MonoBehaviour
 {
     private CharacterController characterController;
     private InGamePhysics inGamePhysics;
-
     private InputReader input;
 
     [SerializeField] private float speed;
@@ -17,12 +15,6 @@ public class PlayerMovement : MonoBehaviour
     public float maxDistance;
     public LayerMask layerMask;
 
-    [SerializeField] private float mouseSens = 1f;
-    [SerializeField] private float upDownRange = 80.0f;
-    private float verticalRotation;
-
-    private Camera mainCamera;
-
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -30,29 +22,13 @@ public class PlayerMovement : MonoBehaviour
         inGamePhysics = GetComponent<InGamePhysics>();
     }
 
-    private void Awake()
-    {
-        mainCamera = Camera.main;
-    }
-
     // Update is called once per frame
     public void Update()
     {
         Move();
-        Rotation();
     }
 
-    public void Rotation()
-    {
-        float mouseXRotation = input.LookInput.x * mouseSens;
-        transform.Rotate(0, mouseXRotation, 0);
-        
-
-        verticalRotation -= input.LookInput.y * mouseSens;
-        verticalRotation = Mathf.Clamp(verticalRotation, -upDownRange, upDownRange);
-        mainCamera.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
-    }
-
+    
     private void Move()
     {
 

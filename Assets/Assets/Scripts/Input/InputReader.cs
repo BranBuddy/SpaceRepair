@@ -58,8 +58,8 @@ namespace Bran
             jumpAction.performed += context => JumpTrigger = true;
             jumpAction.canceled += context => JumpTrigger = false;
 
-            interactAction.performed += context => JumpTrigger = true;
-            interactAction.canceled += context => JumpTrigger = false;
+            interactAction.performed += context => InteractTrigger = true;
+            interactAction.canceled += context => InteractTrigger = false;
         }
 
         private void OnEnable()
